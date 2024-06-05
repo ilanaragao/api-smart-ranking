@@ -1,9 +1,14 @@
-import { Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { CreatePlayerDto } from './dtos/create-player.dto';
 
 @Controller('api/v1/players')
 export class PlayersController {
   @Post()
-  async createOrUpdatePlayer() {
-    return 'This action adds or updates a player';
+  async createOrUpdatePlayer(@Body() createPlayerDto: CreatePlayerDto) {
+    const { email } = createPlayerDto;
+
+    return JSON.stringify({
+      message: `Player with email ${email} created or updated`,
+    });
   }
 }
