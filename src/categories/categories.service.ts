@@ -25,4 +25,18 @@ export class CategoriesService {
     const createdCategory = new this.categoryModel(createCategoryDto);
     return await createdCategory.save();
   }
+
+  async getAllCategories(): Promise<Category[]> {
+    return await this.categoryModel.find().exec();
+  }
+
+  async getCategoryById(category: string): Promise<Category> {
+    const categoryFound = await this.categoryModel.findOne({ category }).exec();
+
+    if (!categoryFound) {
+      throw new BadRequestException(`Category with name ${category} not found`);
+    }
+
+    return categoryFound;
+  }
 }
