@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dtos/create-category.dto';
 import { Category } from './interfaces/category.interface';
@@ -17,15 +18,21 @@ export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
-  async getAllCategories(): Promise<Category[]> {
-    return await this.categoriesService.getAllCategories();
-  }
+  async getCategories(
+    @Query() params: string[],
+  ): Promise<Category[] | Category> {
+    const categoryId = params['categoryId'];
+    const playerId = params['playerId'];
 
-  @Get('/:category')
-  async getCategoryById(
-    @Param('category') category: string,
-  ): Promise<Category> {
-    return await this.categoriesService.getCategoryById(category);
+    if (categoryId) {
+      return await this.categoriesService.getCategoryById(categoryId);
+    }
+
+    if (playerId) {
+      return await this.categoriesService.getPlayerCategory(playerId);
+    }
+
+    return await this.categoriesService.getAllCategories();
   }
 
   @Post()
